@@ -24,3 +24,9 @@ The first and foremost problem that might arise is the lack of data. The COP21 a
 
 As of now no similar visualizations have been found. The United Nations has created a visualization that shows which country or continent made which promises during the new COP21 agreements, this can be shown at http://www.cop21.gouv.fr/en/learn/country-by-country/
 No other breakdowns of the agreements have been found.
+
+## Sketch
+
+The image found below represents a simple sketch of what the visualization is to be.
+
+![](doc/sketch.png)
