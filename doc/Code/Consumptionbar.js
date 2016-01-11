@@ -8,11 +8,11 @@ var xscale = d3.scale.ordinal()
 // define y-scale
 var yscale = d3.scale.linear().range([height, 0]);
 	// define X axis
-var xAxis = d3.svg.axis()
+var xaxis = d3.svg.axis()
     .scale(xscale)
     .orient("bottom");
 // define Y axis
-var yAxis = d3.svg.axis()
+var yaxis = d3.svg.axis()
     .scale(yscale)
     .orient("left")
     //.ticks(10, "%");
@@ -27,21 +27,22 @@ var svg = d3.select("#consumption")
 d3.json("consumption.json", function(error, data){
 	if (error) return console.warn(error);
 consumption = data
-console.log(consumption[1995]["Totaal"]);
+//console.log(consumption[1995]["Totaal"]);
 
 	 // define domain from data
-	 xscale.domain(1990, 2014).rangeRoundBands([0,width], .05);
-	 yscale.domain([0, d3.max(consumption, function(d) { return d; })]);
+	 xscale.domain([1990, 2014]).rangeRoundBands([0,width], .05);
+	 yscale.domain([0, 5000])
+		.range([height, 0]);
 	 // append x axis
 	 svg.append("g")
 	 		.attr("class", "x axis")
 	 		.attr("transform", "translate(0,"+ height + ")")
-	 		.call(xAxis)
+	 		.call(xaxis)
 	 	//.selectAll("text")
 	 	// append y axis
 	   svg.append("g")
 	       .attr("class", "y axis")
-	       .call(yAxis)
+	       .call(yaxis)
 	     .append("text")
 	       .attr("transform", "rotate(-90)")
 	       .attr("y", -35)
@@ -53,7 +54,8 @@ console.log(consumption[1995]["Totaal"]);
 	 			.data(data)
 	 		.enter().append("rect")
 	 			.attr("class", "bar")
-	 			.attr("x", function(d) {return x(d.key); })
-	 			.attr("y", function(d) {return y(d[key]["Totaal"]); })
-	 			.attr("height", function(d) {return height - y(d.value); })
+	 			.attr("x", function(d) { return xscale(d.key); })
+				.attr("width", xscale.rangeBand())
+	 			.attr("y", function(d) { return d.key.Totaal })
+	 			.attr("height", function(d) {return height - (d.key.Totaal); })
 });
