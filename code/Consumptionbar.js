@@ -1,19 +1,3 @@
-function retrievex(data){
-	var years = []
-	for (var i = 1995; i < 2015; i++){
-		years.push(i)
-	}
-	return years
-}
-
-function retrievey(data){
-	var Totaal = []
-	for (var i = 1995; i < 2015; i++){
-		Totaal.push(parseInt(data[i]["Totaal finaal verbruik"]))
-	}
-	return Totaal
-}
-
 function retrievedata(data){
 	var data_list = []
 	for (var i = 1995; i < 2015; i++){
@@ -23,20 +7,22 @@ function retrievedata(data){
 		data_list.push(dict)
 		}
 		console.log(data_list)
+		return data_list
 }
 
 //import dataset
-d3.json("consumption.json", function(error, data){
-	if (error) return console.warn(error);
-consumption = retrievedata(data)
+d3.json("consumption.json", drawBarchart);
 
+function drawBarchart(data){
+	//if (error) return console.warn(error);
+consumption = retrievedata(data)
+//console.log('consumption: ', consumption)
 // define margins
 var margin = {top: 30, right: 20, bottom: 70, left: 60},
-	width = 400 - margin.left - margin.right,
-	height = 300 - margin.top - margin.bottom;
+	width = 800 - margin.left - margin.right,
+	height = 500 - margin.top - margin.bottom;
 // define x-scale
-var xscale = d3.scale.ordinal()
-	.rangeRoundBands([0,width], .1);
+var xscale = d3.scale.ordinal().rangeRoundBands([0,width], .1);
 // define y-scale
 var yscale = d3.scale.linear().range([height, 0]);
 
@@ -59,8 +45,8 @@ var svg = d3.select("#consumption")
 		    //.ticks(10, "%");
 
 	 // define domain from data
-	 xscale.domain(d3.map(consumption, function(d) { return d.year; }));
-	 yscale.domain([0, d3.max(consumption, function(d) { return d.total; })])
+	 xscale.domain(consumption.map(function(d) { return d.year; }));
+	 yscale.domain([0, d3.max(consumption, function(d) {return d.total; })])
 		.range([height, 0]);
 	 // append x axis
 	 svg.append("g")
@@ -78,7 +64,7 @@ var svg = d3.select("#consumption")
 	       .attr("dy", ".71em")
 	       .style("text-anchor", "middle")
 	       .text("PJ");
-//console.log(retrievedata(consumption))
+//console.log(retrievedata(consumption));
 	 	//append bars
 			svg.selectAll(".bar")
 	 			.data(consumption)
@@ -86,6 +72,15 @@ var svg = d3.select("#consumption")
 	 			.attr("class", "bar")
 	 			.attr("x", function(d) { return xscale(d.year); })
 				.attr("width", xscale.rangeBand())
-	 			.attr("y", function(d) {console.log(d.total); return d.total })
-	 			.attr("height", function(d) {return height - (d.total); })
-});
+	 			.attr("y", function(d) { return yscale(d.total) })
+	 			.attr("height", function(d) {return height - yscale(d.total); })
+				.on("click", function() {
+					console.log("rect");
+				  d3.event.stopPropagation();
+				});
+};
+
+// sources
+// http://jsfiddle.net/bxW9T/17/
+// http://bl.ocks.org/mbostock/3885304
+//
