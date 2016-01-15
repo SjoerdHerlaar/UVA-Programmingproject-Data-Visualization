@@ -1,7 +1,19 @@
 function retrievedata(data, year){
 	var data_list = []
 	var details = d3.entries(data[year])
-	console.log(details)
+	//console.log(details)
+	var xoffset = 0
+	for (var i = 0; i < 24; i++) {
+		var market = {
+			name : details[i]["key"],
+			value : parseFloat(details[i]["value"]),
+			x : xoffset,
+			y : 100
+		}
+		xoffset += market["value"]
+		data_list.push(market)
+	}
+		//console.log(data_list)
 		return data_list
 }
 
@@ -9,18 +21,18 @@ d3.json("consumption.json", stacked_chart);
 
 function stacked_chart(data){
 
-// data for testing
-var test = [8, 12, 17, 24, 38, 41, 50]
+// retrieve data
+var stackedData = retrievedata(data, "1998")
 
 var margin = {top: 20, right: 20, bottom: 20, left:40}
   width = 800 - margin.left - margin.right,
   height = 300 - margin.top - margin.bottom;
 
 var xscale = d3.scale.linear()
-  .rangeRound([width, 0]);
+  .rangeRound([0, width]);
 
 var yscale = d3.scale.ordinal()
-  .rangeRoundBands([0, width], .1);
+  .rangeRoundBands([height, 0],.1);
 
 var colour = d3.scale.ordinal()
   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c",
@@ -44,17 +56,41 @@ var svg = d3.select("#consumption_stack")
       .attr("transform",
       "translate(" + margin.left + "," + margin.top + ")");
 
-// colour scheme add
-// colour.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
-//
-// data.forEach(function(d) {
-//     var x0 = 0;
-//     d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-//     d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
-//   });
 
-// create stack data
-var stacked = d3.layout.stack(retrievedata(data, 2014))
-console.log(stacked)
+
+			xscale.domain(stackedData.map(function(d) { return d.x; }));
+			yscale.domain([0]);
+
+			console.log(stackedData)
+			console.log(xscale.domain())
+			console.log(yscale.domain())
+
+		svg.append("g")
+			 .attr("class", "x axis")
+			 .attr("transform", "translate(0,"+ height + ")")
+			 .call(xaxis)
+
+			 // append axis
+		svg.append("g")
+				.attr("class", "y axis")
+				.call(yaxis)
+			.append("text")
+				.attr("transform", "rotate(-90)")
+				.attr("y", -35)
+				.attr("dy", ".71em")
+				.style("text-anchor", "middle")
+				.text("PJ");
+
+			var bars = svg.selectAll("rect")
+					.data(stackedData)
+					.enter().append("rect")
+		 			.attr("class", "bar")
+					.attr("height", 30)
+					.attr("y", function(d) { return yscale(d.y); })
+					.attr("width", function(d) { return xscale(d.value); })
+					.attr("x", function(d) { return xscale(d.x); })
+					// .attr("y", function(d) { console.log(yscale(d.y)); return yscale(d.y);});
+					// .attr("width", function(d) { console.log(xscale(d.value)); return xscale(d.value)})
+					// .attr("x", function(d) { console.log(xscale(d.x)); return xscale(d.x); });
 
 };
