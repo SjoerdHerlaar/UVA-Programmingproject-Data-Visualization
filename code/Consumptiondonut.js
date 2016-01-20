@@ -2,8 +2,7 @@ function retrievedata (data, year){
   var data_list = []
   var details = d3.entries(data[year])
   for (var i = 0; i < 24; i++){
-    //console.log(details[i]["key"])
-    if (details[i]["key"] == "Totaal finaal verbruik"){console.log('i: ', i); continue};
+    if (details[i]["key"] == "Totaal finaal verbruik"){continue};
     if (details[i]["key"] == "Totaal") {continue};
     var market = {
       name : details[i]["key"],
@@ -11,7 +10,7 @@ function retrievedata (data, year){
     }
     data_list.push(market);
   }
-  console.log(data_list)
+  return data_list
 }
 
 var width = 800,
@@ -27,11 +26,11 @@ var arc = d3.svg.arc()
 
 var pie = d3.layout.pie()
   .sort(null)
-  .value(function(d) { console.log('value: ', value); return d.value})
+  .value(function(d) { return d.value})
 
-d3.json("consumption.json", drawBarchart);
+d3.json("consumption.json", drawPiechart);
 
-function drawBarchart(data){
+function drawPiechart(data){
 
 var details = retrievedata(data, 2014)
 
@@ -41,12 +40,12 @@ var svg = d3.select("#Consumptiondonut")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
 
-var arc = svg.selectAll(".arc")
-    .data(function(d){console.log('data: ', data); return pie(data)})
+var g = svg.selectAll(".arc")
+    .data(function(d){ return pie(details)})
   .enter().append("g")
     .attr("class", "arc");
 
-arc.append("path")
+g.append("path")
   .attr("d", arc)
   .style("fill", function(d) { return color(d.data.name)});
 };
