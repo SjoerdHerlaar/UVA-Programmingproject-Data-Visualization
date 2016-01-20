@@ -59,6 +59,7 @@ var svg = d3.select("#consumption")
 	 		.attr("class", "x axis")
 	 		.attr("transform", "translate(0,"+ height + ")")
 	 		.call(xaxis)
+			.call(tip);
 	 	//.selectAll("text")
 	 	// append y axis
 	   svg.append("g")
