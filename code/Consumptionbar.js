@@ -46,8 +46,9 @@ var svg = d3.select("#consumption")
 
 		var bartip = d3.tip()
 		  	.attr('class', 'd3-tip')
+				.attr('id', 'bartip')
 		  	.offset([-10, 0])
-		  	.html(function(d) { return "<strong>year:</strong> <span style='color:red'>" + d.total + "</span>";
+		  	.html(function(d) { return "<span style='color:red'>" + d.total + "</span><strong> Peta Joule</strong>";
 		  })
 
 	 // define domain from data
@@ -134,11 +135,13 @@ var pie = d3.layout.pie()
 function drawPiechart(data, year){
 
 var details = retrievedetails(data, year)
+console.log(details)
 
 var pietip = d3.tip()
 		.attr('class', 'd3-tip')
+		.attr('id', 'pietip')
 		.offset([-10, 0])
-		.html(function(d) { return "<strong>year:</strong> <span style='color:red'>" + details.value + "</span>";
+		.html(function(d) { return "<span style='color:red'>" + d.value + "</span> <strong>Peta Joule</strong> ";
 	})
 
 var piesvg = d3.select("#Consumptiondonut")

@@ -35,7 +35,7 @@
   fill: brown;
 }
 
-.d3-tip {
+#bartip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
@@ -43,8 +43,7 @@
   color: #fff;
   border-radius: 2px;
 }
-
-  .d3-tip:after {
+#bartip:after {
     box-sizing: border-box;
     display: inline;
     font-size: 10px;
@@ -55,8 +54,7 @@
     position: absolute;
     text-align: center;
 }
-
-.d3-tip.n:after {
+#bartip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
@@ -75,4 +73,19 @@
 
 .x.axis path {
   display: none;
+}
+
+#pietip{
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  display: none;
+  font-size: 12px;
+  left: 130px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 95px;
+  width: 80px;
+  z-index: 10;
 }
