@@ -44,7 +44,7 @@ var svg = d3.select("#consumption")
 		    .orient("left")
 		    //.ticks(10, "%");
 
-		var tip = d3.tip()
+		var bartip = d3.tip()
 		  	.attr('class', 'd3-tip')
 		  	.offset([-10, 0])
 		  	.html(function(d) { return "<strong>year:</strong> <span style='color:red'>" + d.total + "</span>";
@@ -59,7 +59,7 @@ var svg = d3.select("#consumption")
 	 		.attr("class", "x axis")
 	 		.attr("transform", "translate(0,"+ height + ")")
 	 		.call(xaxis)
-			.call(tip);
+			.call(bartip);
 	 	//.selectAll("text")
 	 	// append y axis
 	   svg.append("g")
@@ -82,8 +82,8 @@ var svg = d3.select("#consumption")
 				.attr("width", xscale.rangeBand())
 	 			.attr("y", function(d) { return yscale(d.total) })
 	 			.attr("height", function(d) {return height - yscale(d.total); })
-				.on('mouseover', tip.show)
-      	.on('mouseout', tip.hide)
+				.on('mouseover', bartip.show)
+      	.on('mouseout', bartip.hide)
 				.on("click", function() {
 					console.log(this.id);
 				  d3.event.stopPropagation();
@@ -135,6 +135,12 @@ function drawPiechart(data, year){
 
 var details = retrievedetails(data, year)
 
+var pietip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([-10, 0])
+		.html(function(d) { return "<strong>year:</strong> <span style='color:red'>" + details.value + "</span>";
+	})
+
 var piesvg = d3.select("#Consumptiondonut")
     .attr("width", piewidth)
     .attr("height", pieheight)
@@ -144,9 +150,14 @@ var piesvg = d3.select("#Consumptiondonut")
 var g = piesvg.selectAll(".arc")
     .data(function(d){ return pie(details)})
   .enter().append("g")
-    .attr("class", "arc");
+    .attr("class", "arc")
 
 g.append("path")
   .attr("d", arc)
-  .style("fill", function(d) { return piecolor(d.data.name)});
+  .style("fill", function(d) { return piecolor(d.data.name)})
+	.call(pietip)
+	.on("mouseover", pietip.show)
+	.on("mouseout", pietip.hide)
+
+//g.selectAll(".arc")
 };

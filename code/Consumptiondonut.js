@@ -1,4 +1,4 @@
-function retrievedata (data, year){
+function retrievedetails (data, year){
   var data_list = []
   var details = d3.entries(data[year])
   for (var i = 0; i < 24; i++){
@@ -32,7 +32,7 @@ d3.json("consumption.json", drawPiechart);
 
 function drawPiechart(data){
 
-var details = retrievedata(data, 2014)
+var details = retrievedetails(data, year)
 
 var svg = d3.select("#Consumptiondonut")
     .attr("width", width)
